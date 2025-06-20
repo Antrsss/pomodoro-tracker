@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "911171348967",
+    "project_id": "pixel-life-tracker",
+    "storage_bucket": "pixel-life-tracker.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911171348967:android:cba120b37c9cec62f13542",
+        "android_client_info": {
+          "package_name": "com.example.pomodorotracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqvC4RjE71GIPwvdYCEQN2yjjWUIIfrW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
