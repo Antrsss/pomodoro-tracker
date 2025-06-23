@@ -1,9 +1,10 @@
 package com.example.pomodorotracker.presentation.auth.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pomodorotracker.data.repositories.AccountServiceImpl
+import com.example.pomodorotracker.domain.repositories.AccountService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,9 +12,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val AUTH_VM = "AUTH_VM"
+
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val accountService: AccountServiceImpl
+    private val accountService: AccountService
 ) : ViewModel() {
     var uiState = mutableStateOf(LoginUiState())
         private set
@@ -30,13 +33,17 @@ class AuthViewModel @Inject constructor(
     val authState: StateFlow<AuthState> = _authState.asStateFlow()
 
     init {
+        Log.d(AUTH_VM, "Init")
         checkAuthStatus()
+        Log.d(AUTH_VM, "Init ended")
     }
 
     fun checkAuthStatus() {
         if (accountService.currentUser != null) {
+            Log.d(AUTH_VM, "Authenticated")
             _authState.value = AuthState.Authenticated
         } else {
+            Log.d(AUTH_VM, "Unauthenticated")
             _authState.value = AuthState.Unauthenticated
         }
     }

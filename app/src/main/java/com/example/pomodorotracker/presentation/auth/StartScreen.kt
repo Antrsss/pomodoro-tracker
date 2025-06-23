@@ -22,8 +22,6 @@ import com.example.pomodorotracker.presentation.navigation.ScreenRoutes
 @Composable
 fun StartScreen(
     navController: NavController,
-    onCreateAccountClicked: () -> Unit,
-    onSignInClicked: () -> Unit,
     authViewModel: AuthViewModel = hiltViewModel(),
 ) {
     val authState by authViewModel.authState.collectAsState()
@@ -46,12 +44,12 @@ fun StartScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = onSignInClicked
+            onClick = { navController.navigate(ScreenRoutes.SignIn.route) }
         ) {
             Text(text = "Sign in")
         }
         Button(
-            onClick = onCreateAccountClicked
+            onClick = { navController.navigate(ScreenRoutes.SignUp.route) }
         ) {
             Text(text = "Create an account")
         }

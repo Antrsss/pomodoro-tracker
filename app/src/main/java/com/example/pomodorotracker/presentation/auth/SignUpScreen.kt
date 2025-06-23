@@ -27,14 +27,13 @@ import com.example.pomodorotracker.presentation.navigation.ScreenRoutes
 @Composable
 fun SignUpScreen(
     onBackClicked: () -> Unit,
-    onSignUpClicked: () -> Unit,
-    goToSignInScreen: () -> Unit,
+    navController: NavController,
     authViewModel: AuthViewModel = hiltViewModel(),
-    navController: NavController
 ) {
     val uiState by authViewModel.uiState
     val authState by authViewModel.authState.collectAsState()
     val context = LocalContext.current
+
     LaunchedEffect(authState) {
         when(authState) {
             is AuthState.Authenticated -> navController.navigate(ScreenRoutes.Timer.route)
@@ -49,8 +48,7 @@ fun SignUpScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         Button(
             onClick = onBackClicked,
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Text(text = "Back")
         }
@@ -69,7 +67,9 @@ fun SignUpScreen(
         )
         AuthButton(
             text = "Sign up",
-            onClick = onSignUpClicked
+            onClick = {
+                authViewModel.signUp(uiState.email, uiState.password)
+            }
         )
 
         Text(text = "Sign up with")
@@ -81,7 +81,7 @@ fun SignUpScreen(
                 text = "Sign in",
                 color = Color.Blue,
                 modifier = Modifier.clickable {
-                goToSignInScreen
+                    navController.navigate(ScreenRoutes.SignIn.route)
             })
         }
     }

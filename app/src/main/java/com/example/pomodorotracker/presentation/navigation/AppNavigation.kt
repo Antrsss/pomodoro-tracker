@@ -13,7 +13,10 @@ fun AppNavigation(modifier: Modifier = Modifier) {
 
     NavHost(navController = navController, startDestination = ScreenRoutes.Splash.route) {
         composable(route = ScreenRoutes.Splash.route) {
-            SplashScreen(navController)
+            SplashScreen(
+                isAuthenticatedAction = { navController.navigate(ScreenRoutes.Timer.route) },
+                isNotAuthenticatedAction = { navController.navigate(ScreenRoutes.Start.route) },
+            )
         }
         authGraph(navController)
     }
