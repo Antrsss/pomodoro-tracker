@@ -8,7 +8,8 @@ interface AccountService {
 
     suspend fun createAccount(email: String, password: String): Result<AuthResult>
     suspend fun authenticate(email: String, password: String): Result<AuthResult>
-    suspend fun sendVerificationEmail(email: String): Result<Unit>
+    suspend fun sendVerificationEmail(): Result<Unit>
+    suspend fun isEmailVerified(): Boolean
     suspend fun sendRecoveryEmail(email: String): Result<Unit>
     suspend fun updateAccount(user: FirebaseUser)
     suspend fun deleteAccount()

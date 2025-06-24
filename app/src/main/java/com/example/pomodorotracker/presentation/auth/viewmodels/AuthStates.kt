@@ -1,10 +1,18 @@
 package com.example.pomodorotracker.presentation.auth.viewmodels
 
 sealed class AuthState {
-    object Authenticated : AuthState()
-    object Unauthenticated : AuthState()
     object Loading : AuthState()
+    object Unauthenticated : AuthState()
+    data class Authenticated(val message: String? = null) : AuthState()
+    data class EmailNotVerified(val message: String?) : AuthState()
     data class Error(val message: String) : AuthState()
+
+    fun copyWithMessage(message: String?): AuthState {
+        return when (this) {
+            is Authenticated -> this.copy(message = message)
+            else -> this
+        }
+    }
 }
 
 data class LoginUiState(

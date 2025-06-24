@@ -25,6 +25,7 @@ import com.example.pomodorotracker.presentation.auth.components.AuthOutlinedFiel
 import com.example.pomodorotracker.presentation.auth.viewmodels.AuthState
 import com.example.pomodorotracker.presentation.auth.viewmodels.AuthViewModel
 import com.example.pomodorotracker.presentation.navigation.ScreenRoutes
+import com.google.android.gms.auth.api.Auth
 
 @Composable
 fun SignUpScreen(
@@ -39,6 +40,10 @@ fun SignUpScreen(
     LaunchedEffect(authState) {
         when(authState) {
             is AuthState.Authenticated -> navController.navigate(ScreenRoutes.Timer.route)
+            is AuthState.EmailNotVerified -> Toast.makeText(
+                context,
+                (authState as AuthState.EmailNotVerified).message,
+                Toast.LENGTH_SHORT).show()
             is AuthState.Error -> Toast.makeText(
                 context,
                 (authState as AuthState.Error).message,

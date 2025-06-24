@@ -29,13 +29,18 @@ class AccountServiceImpl @Inject constructor(
             Result.failure(e)
         }
 
-    override suspend fun sendVerificationEmail(email: String): Result<Unit> =
+    override suspend fun sendVerificationEmail(): Result<Unit> =
         try {
             auth.currentUser?.sendEmailVerification()
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
+
+    override suspend fun isEmailVerified(): Boolean {
+        auth.currentUser?.reload()?.await()
+        return auth.currentUser?.isEmailVerified ?: false
+    }
 
     override suspend fun sendRecoveryEmail(email: String): Result<Unit> =
         try {

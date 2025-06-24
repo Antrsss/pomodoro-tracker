@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.pomodorotracker.presentation.auth.SplashScreen
+import com.example.pomodorotracker.presentation.timer.TimerScreen
 
 @Composable
 fun AppNavigation(modifier: Modifier = Modifier) {
@@ -19,5 +20,8 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             )
         }
         authGraph(navController)
+        composable(route = ScreenRoutes.Timer.route) {
+            TimerScreen()
+        }
     }
 }

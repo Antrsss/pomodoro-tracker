@@ -1,11 +1,11 @@
 package com.example.pomodorotracker.presentation.auth.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pomodorotracker.domain.repositories.AccountService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,18 +33,20 @@ class AuthViewModel @Inject constructor(
     val authState: StateFlow<AuthState> = _authState.asStateFlow()
 
     init {
-        Log.d(AUTH_VM, "Init")
         checkAuthStatus()
-        Log.d(AUTH_VM, "Init ended")
     }
 
-    fun checkAuthStatus() {
-        if (accountService.currentUser != null) {
-            Log.d(AUTH_VM, "Authenticated")
-            _authState.value = AuthState.Authenticated
-        } else {
-            Log.d(AUTH_VM, "Unauthenticated")
-            _authState.value = AuthState.Unauthenticated
+    private fun checkAuthStatus() {
+        viewModelScope.launch {
+            when {
+                accountService.currentUser != null && accountService.isEmailVerified() ->
+                    _authState.value = AuthState.Authenticated()
+                accountService.currentUser != null && !accountService.isEmailVerified() -> {
+                    _authState.value =
+                        AuthState.EmailNotVerified("Verification email sent. Please, verify your email")
+                }
+                else -> _authState.value = AuthState.Unauthenticated
+            }
         }
     }
 
@@ -58,11 +60,35 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             accountService.createAccount(email, password)
                 .onSuccess { result ->
-                    _authState.value = AuthState.Authenticated
+                    sendEmailVerification()
+                    checkEmailVerification()
                 }
                 .onFailure { e ->
                     _authState.value = AuthState.Error(e.message ?: "Unknown exception")
                 }
+        }
+    }
+
+    private suspend fun sendEmailVerification() {
+        _authState.value = AuthState.Loading
+        accountService.sendVerificationEmail()
+            .onSuccess {
+                _authState.value = AuthState.EmailNotVerified("Verification email sent. Please, verify your email")
+            }
+            .onFailure { e ->
+                _authState.value = AuthState.Error(e.message ?: "Failed to send verification email")
+            }
+    }
+
+    private fun checkEmailVerification() {
+        viewModelScope.launch {
+            while (true) {
+                delay(1000)
+                if (accountService.isEmailVerified()) {
+                    _authState.value = AuthState.Authenticated()
+                    break
+                }
+            }
         }
     }
 
@@ -76,7 +102,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             accountService.authenticate(email, password)
                 .onSuccess {
-                    _authState.value = AuthState.Authenticated
+                    _authState.value = AuthState.Authenticated()
                 }
                 .onFailure { e ->
                     _authState.value = AuthState.Error(e.message ?: "Unknown exception")
