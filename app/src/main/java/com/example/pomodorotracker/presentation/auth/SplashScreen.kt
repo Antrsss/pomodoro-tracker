@@ -28,5 +28,5 @@ fun SplashScreen(
         }
     }
     //Set image icon
-    Text(text = "Loading...", modifier = Modifier.fillMaxSize().padding(20.dp))
+    Text(text = "Loading...", modifier = Modifier.fillMaxSize().padding(40.dp))
 }

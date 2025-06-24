@@ -17,16 +17,18 @@ fun NavGraphBuilder.authGraph(
     composable(route = ScreenRoutes.SignUp.route) {
         SignUpScreen(
             navController = navController,
-            onBackClicked = {},
+            onBackClicked = { navController.popBackStack() },
         )
     }
     composable(route = ScreenRoutes.SignIn.route) {
         SignInScreen(
             navController = navController,
-            onBackClicked = {},
+            onBackClicked = { navController.popBackStack() },
         )
     }
     composable(route = ScreenRoutes.ForgotPassword.route) {
-        ForgotPasswordScreen()
+        ForgotPasswordScreen(
+            onBackClicked = { navController.popBackStack() }
+        )
     }
 }
