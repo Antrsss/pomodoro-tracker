@@ -40,10 +40,7 @@ fun SignUpScreen(
     LaunchedEffect(authState) {
         when(authState) {
             is AuthState.Authenticated -> navController.navigate(ScreenRoutes.Timer.route)
-            is AuthState.EmailNotVerified -> Toast.makeText(
-                context,
-                (authState as AuthState.EmailNotVerified).message,
-                Toast.LENGTH_SHORT).show()
+            is AuthState.EmailNotVerified -> navController.navigate(ScreenRoutes.ConfirmEmail.route)
             is AuthState.Error -> Toast.makeText(
                 context,
                 (authState as AuthState.Error).message,

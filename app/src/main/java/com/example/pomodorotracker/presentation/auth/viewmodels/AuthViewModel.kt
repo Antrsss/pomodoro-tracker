@@ -1,5 +1,6 @@
 package com.example.pomodorotracker.presentation.auth.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -73,11 +74,19 @@ class AuthViewModel @Inject constructor(
         _authState.value = AuthState.Loading
         accountService.sendVerificationEmail()
             .onSuccess {
-                _authState.value = AuthState.EmailNotVerified("Verification email sent. Please, verify your email")
+                _authState.value = AuthState.EmailNotVerified("Verification email was sent. Please, verify your email")
             }
             .onFailure { e ->
                 _authState.value = AuthState.Error(e.message ?: "Failed to send verification email")
             }
+    }
+
+    fun resendEmailVerification() {
+        viewModelScope.launch {
+            Log.d(AUTH_VM, authState.value.toString())
+            sendEmailVerification()
+            Log.d(AUTH_VM, authState.value.toString())
+        }
     }
 
     private fun checkEmailVerification() {

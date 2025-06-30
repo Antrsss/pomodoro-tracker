@@ -7,6 +7,7 @@ sealed class ScreenRoutes(val route: String) {
     object SignUp: ScreenRoutes("sign_up")
     object SignIn: ScreenRoutes("sign_in")
     object ForgotPassword: ScreenRoutes("forgot_password")
+    object ConfirmEmail: ScreenRoutes("confirm_email")
 
     object Timer: ScreenRoutes("timer")
 }
