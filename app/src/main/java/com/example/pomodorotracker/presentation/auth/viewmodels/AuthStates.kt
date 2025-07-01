@@ -4,7 +4,8 @@ sealed class AuthState {
     object Loading : AuthState()
     object Unauthenticated : AuthState()
     data class Authenticated(val message: String? = null) : AuthState()
-    data class EmailNotVerified(val message: String? = null) : AuthState()
+    data class EmailConfirmationNeeded(val message: String? = null) : AuthState()
+    object EmailConfirmed : AuthState()
     data class Error(val message: String) : AuthState()
 
     fun copyWithMessage(message: String?): AuthState {

@@ -32,6 +32,7 @@ fun StartScreen(
     LaunchedEffect(authState) {
         when(authState) {
             is AuthState.Authenticated -> navController.navigate(ScreenRoutes.Timer.route)
+            is AuthState.EmailConfirmationNeeded -> navController.navigate(ScreenRoutes.EmailConfirmation.route)
             is AuthState.Error -> Toast.makeText(
                 context,
                 (authState as AuthState.Error).message,

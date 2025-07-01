@@ -3,7 +3,8 @@ package com.example.pomodorotracker.presentation.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.pomodorotracker.presentation.auth.ConfirmEmailScreen
+import com.example.pomodorotracker.presentation.auth.EmailConfirmationScreen
+import com.example.pomodorotracker.presentation.auth.EmailConfirmedScreen
 import com.example.pomodorotracker.presentation.auth.ForgotPasswordScreen
 import com.example.pomodorotracker.presentation.auth.SignInScreen
 import com.example.pomodorotracker.presentation.auth.SignUpScreen
@@ -39,10 +40,15 @@ fun NavGraphBuilder.authGraph(
             onBackClicked = { navController.popBackStack() }
         )
     }
-    composable(route = ScreenRoutes.ConfirmEmail.route) {
-        ConfirmEmailScreen(
+    composable(route = ScreenRoutes.EmailConfirmation.route) {
+        EmailConfirmationScreen(
             authViewModel = authViewModel,
             navController = navController
+        )
+    }
+    composable(route = ScreenRoutes.EmailConfirmed.route) {
+        EmailConfirmedScreen(
+            startBtnAction = { navController.navigate(ScreenRoutes.Timer.route) }
         )
     }
 }

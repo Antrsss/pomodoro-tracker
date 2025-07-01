@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pomodorotracker.domain.repositories.AccountService
+import com.google.android.gms.auth.api.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,14 +40,13 @@ class AuthViewModel @Inject constructor(
 
     private fun checkAuthStatus() {
         viewModelScope.launch {
-            when {
-                accountService.currentUser != null && accountService.isEmailVerified() ->
+            if (accountService.currentUser != null) {
+                if (accountService.isEmailVerified())
                     _authState.value = AuthState.Authenticated()
-                accountService.currentUser != null && !accountService.isEmailVerified() -> {
-                    _authState.value =
-                        AuthState.EmailNotVerified("Verification email sent. Please, verify your email")
-                }
-                else -> _authState.value = AuthState.Unauthenticated
+                else
+                    _authState.value = AuthState.EmailConfirmationNeeded()
+            } else {
+                _authState.value = AuthState.Unauthenticated
             }
         }
     }
@@ -74,7 +74,7 @@ class AuthViewModel @Inject constructor(
         _authState.value = AuthState.Loading
         accountService.sendVerificationEmail()
             .onSuccess {
-                _authState.value = AuthState.EmailNotVerified("Verification email was sent. Please, verify your email")
+                _authState.value = AuthState.EmailConfirmationNeeded("Verification email was sent. Please, verify your email")
             }
             .onFailure { e ->
                 _authState.value = AuthState.Error(e.message ?: "Failed to send verification email")
